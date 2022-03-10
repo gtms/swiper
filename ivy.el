@@ -3837,10 +3837,11 @@ This function serves as a fallback when nothing else is available."
            (const ivy-minibuffer-match-face-4)
            (face :tag "Other face"))))
 
-(defun ivy--minibuffer-face (n)
-  "Return Nth face from `ivy-minibuffer-faces'.
+(defun ivy--minibuffer-face (n &optional faces)
+  "Return Nth face from FACES (defaults to `ivy-minibuffer-faces').
 N wraps around, but skips the first element of the list."
-  (let ((tail (cdr ivy-minibuffer-faces)))
+  (let* ((faces (or faces ivy-minibuffer-faces))
+         (tail (cdr faces)))
     (nth (mod (+ n 2) (length tail)) tail)))
 
 (defun ivy--flx-propertize (x)
@@ -4013,11 +4014,11 @@ in this case."
                   (let ((face
                          (cond ((and ivy-use-group-face-if-no-groups
                                      (zerop ivy--subexps))
-                                (cadr ivy-minibuffer-faces))
+                                (cadr swiper-background-faces))
                                ((zerop i)
-                                (car ivy-minibuffer-faces))
+                                (car swiper-background-faces))
                                (t
-                                (ivy--minibuffer-face n)))))
+                                (ivy--minibuffer-face n swiper-background-faces)))))
                     (add-face-text-property beg end face nil str))
                   (unless (zerop i)
                     (setq prev end))))
@@ -4983,11 +4984,15 @@ When `ivy-calling' isn't nil, call `ivy-occur-press'."
   (font-lock-mode -1)
   (dolist (cand cands)
     (setq cand
-          (if (string-match "\\`\\(.*:[0-9]+:\\)\\(.*\\)\\'" cand)
-              (let ((file-and-line (match-string 1 cand))
-                    (grep-line (match-string 2 cand)))
+          (if (string-match "\\`\\([^:\n]+?\\):\\([0-9]+\\):\\(.*\\)\\'" cand)
+              (let ((file (match-string 1 cand))
+                    (line (match-string 2 cand))
+                    (grep-line (match-string 3 cand)))
                 (concat
-                 (propertize file-and-line 'face 'ivy-grep-info)
+                 (propertize file 'face 'ivy-grep-info)
+                 ":"
+                 (propertize line 'face 'ivy-grep-line-number)
+                 ":"
                  (ivy--highlight-fuzzy grep-line)))
             (ivy--highlight-fuzzy (copy-sequence cand))))
     (add-text-properties
