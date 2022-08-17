@@ -3542,6 +3542,7 @@ height < `ivy-height', auto-shrink the minibuffer."
 (declare-function fzf-native-score "ext:fzf-native")
 (declare-function flx-make-string-cache "ext:flx")
 (declare-function flx-score "ext:flx")
+(declare-function flx-rs-score "ext:flx")
 
 (defvar ivy--flx-cache nil)
 
