@@ -3686,19 +3686,21 @@ The alist VAL is a sorting function with the signature of
   (let ((default-directory ivy--directory))
     (sort (copy-sequence candidates) #'file-newer-than-file-p)))
 
-(defcustom ivy-sorting-algorithm 'hotfuzz
+(defcustom ivy-sorting-algorithm 'flx
   "External sorting algorithm of choice to use when available.
 
-Supported options include ‘hotfuzz’ (default), ‘fzf-native’ and
-‘flx’."
+Supported options include ‘flx’ (default), ‘flx-rs’, ‘hotfuzz’
+and ‘fzf-native’."
   :type '(choice
+          (const :tag "Use flx when available" flx)
+          (const :tag "Use flx-rs when available" flx-rs)
           (const :tag "Use hotfuzz when available" hotfuzz)
-          (const :tag "Use fzf-native when available" fzf-native)
-          (const :tag "Use flx when available" flx)))
+          (const :tag "Use fzf-native when available" fzf-native)))
 
+(defvar ivy--flx-featurep (require 'flx nil 'noerror))
+(defvar ivy--flx-rs-featurep (require 'flx-rs nil 'noerror))
 (defvar ivy--hotfuzz-featurep (require 'hotfuzz nil 'noerror))
 (defvar ivy--fzf-native-featurep (require 'fzf-native nil 'noerror))
-(defvar ivy--flx-featurep (require 'flx nil 'noerror))
 
 (defun ivy--sort (name candidates)
   "Re-sort candidates by NAME.
