@@ -3701,7 +3701,10 @@ All CANDIDATES are assumed to match NAME."
   (let (fun)
     (cond ((setq fun (ivy-alist-setting ivy-sort-matches-functions-alist))
            (funcall fun name candidates))
-          ((and ivy--flx-featurep
+          ((and (or (and (eq ivy-sorting-algorithm 'flx)
+                         ivy--flx-featurep)
+                    (and (eq ivy-sorting-algorithm 'fzf-native)
+                         ivy--fzf-native-featurep))
                 (eq ivy--regex-function 'ivy--regex-fuzzy))
            (ivy--flx-sort name candidates))
           (t
