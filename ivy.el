@@ -3538,6 +3538,7 @@ height < `ivy-height', auto-shrink the minibuffer."
          (font-lock-append-text-property 0 len 'face face str)))))
   str)
 
+(declare-function fzf-native-score "ext:fzf-native")
 (declare-function flx-make-string-cache "ext:flx")
 (declare-function flx-score "ext:flx")
 
