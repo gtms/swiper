@@ -3971,14 +3971,11 @@ N wraps around, but skips the first element of the list."
              ;; Strip off the leading "^" for flx matching
              (flx-name (if bolp (substring name 1) name))
              (sort-fun (cond ((eq ivy-sorting-algorithm 'flx-rs)
-                              (lambda (cand flx-name)
-                                (flx-rs-score cand flx-name)))
+                              #'flx-rs-score)
                              ((eq ivy-sorting-algorithm 'fzf-native)
-                              (lambda (cand flx-name)
-                                (fzf-native-score cand flx-name)))
+                              #'fzf-native-score)
                              ((eq ivy-sorting-algorithm 'hotfuzz)
-                              (lambda (cand flx-name)
-                                (hotfuzz--cost flx-name cand)))
+                              #'hotfuzz--cost)
                              (t
                               (lambda (cand flx-name)
                                 (flx-score cand flx-name ivy--flx-cache)))))
