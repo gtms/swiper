@@ -3965,11 +3965,15 @@ N wraps around, but skips the first element of the list."
                                    "")))
              ;; Strip off the leading "^" for flx matching
              (flx-name (if bolp (substring name 1) name))
-             (sort-fun (if (eq ivy-sorting-algorithm 'fzf-native)
-                           (lambda (cand flx-name)
-                             (fzf-native-score cand flx-name))
-                         (lambda (cand flx-name)
-                           (flx-score cand flx-name ivy--flx-cache))))
+             (sort-fun (cond ((eq ivy-sorting-algorithm 'fzf-native)
+                              (lambda (cand flx-name)
+                                (fzf-native-score cand flx-name)))
+                             ((eq ivy-sorting-algorithm 'hotfuzz)
+                              (lambda (cand flx-name)
+                                (hotfuzz--cost flx-name cand)))
+                             (t
+                              (lambda (cand flx-name)
+                                (flx-score cand flx-name ivy--flx-cache)))))
              cands-left
              cands-to-sort)
 
