@@ -3686,7 +3686,7 @@ The alist VAL is a sorting function with the signature of
   (let ((default-directory ivy--directory))
     (sort (copy-sequence candidates) #'file-newer-than-file-p)))
 
-(defcustom ivy-sorting-algorithm 'flx
+(defcustom ivy-flx-scoring-algorithm 'flx
   "External sorting algorithm of choice to use when available.
 
 Supported options include ‘flx’ (default), ‘flx-rs’, ‘hotfuzz’
@@ -3708,13 +3708,13 @@ All CANDIDATES are assumed to match NAME."
   (let (fun)
     (cond ((setq fun (ivy-alist-setting ivy-sort-matches-functions-alist))
            (funcall fun name candidates))
-          ((and (or (and (eq ivy-sorting-algorithm 'flx)
+          ((and (or (and (eq ivy-flx-scoring-algorithm 'flx)
                          ivy--flx-featurep)
-                    (and (eq ivy-sorting-algorithm 'flx-rs)
+                    (and (eq ivy-flx-scoring-algorithm 'flx-rs)
                          ivy--flx-rs-featurep)
-                    (and (eq ivy-sorting-algorithm 'hotfuzz)
+                    (and (eq ivy-flx-scoring-algorithm 'hotfuzz)
                          ivy--hotfuzz-featurep)
-                    (and (eq ivy-sorting-algorithm 'fzf-native)
+                    (and (eq ivy-flx-scoring-algorithm 'fzf-native)
                          ivy--fzf-native-featurep))
                 (eq ivy--regex-function 'ivy--regex-fuzzy))
            (ivy--flx-sort name candidates))
@@ -3970,15 +3970,15 @@ N wraps around, but skips the first element of the list."
                                    "")))
              ;; Strip off the leading "^" for flx matching
              (flx-name (if bolp (substring name 1) name))
-             (sort-fun (cond ((eq ivy-sorting-algorithm 'flx-rs)
-                              #'flx-rs-score)
-                             ((eq ivy-sorting-algorithm 'fzf-native)
-                              #'fzf-native-score)
-                             ((eq ivy-sorting-algorithm 'hotfuzz)
-                              #'hotfuzz--cost)
-                             (t
-                              (lambda (cand flx-name)
-                                (flx-score cand flx-name ivy--flx-cache)))))
+             (score-fun (cond ((eq ivy-flx-scoring-algorithm 'flx-rs)
+                               #'flx-rs-score)
+                              ((eq ivy-flx-scoring-algorithm 'fzf-native)
+                               #'fzf-native-score)
+                              ((eq ivy-flx-scoring-algorithm 'hotfuzz)
+                               #'hotfuzz--cost)
+                              (t
+                               (lambda (cand flx-name)
+                                 (flx-score cand flx-name ivy--flx-cache)))))
              cands-left
              cands-to-sort)
 
@@ -4000,7 +4000,7 @@ N wraps around, but skips the first element of the list."
                  (sort (mapcar
                         (lambda (cand)
                           (cons cand
-                                (car (funcall sort-fun cand flx-name))))
+                                (car (funcall score-fun cand flx-name))))
                         cands-to-sort)
                        (lambda (c1 c2)
                          ;; Break ties by length
