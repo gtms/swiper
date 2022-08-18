@@ -3687,7 +3687,7 @@ The alist VAL is a sorting function with the signature of
     (sort (copy-sequence candidates) #'file-newer-than-file-p)))
 
 (defcustom ivy-flx-scoring-algorithm 'flx
-  "External sorting algorithm of choice to use when available.
+  "External scoring algorithm to sort candidates matched by `ivy--regex-fuzzy'.
 
 Supported options include ‘flx’ (default), ‘flx-rs’, ‘hotfuzz’
 and ‘fzf-native’."
