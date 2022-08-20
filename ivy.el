@@ -3692,6 +3692,7 @@ The alist VAL is a sorting function with the signature of
 Supported options include ‘flx’ (default), ‘flx-rs’, ‘hotfuzz’
 and ‘fzf-native’."
   :type '(choice
+          (const :tag "Do not use algorithmic sorting of candidates" nil)
           (const :tag "Use flx when available" flx)
           (const :tag "Use flx-rs when available" flx-rs)
           (const :tag "Use hotfuzz when available" hotfuzz)
