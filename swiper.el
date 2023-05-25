@@ -1576,7 +1576,7 @@ When the input is empty, browse the search history instead."
 (defvar swiper-isearch-map
   (let ((map (make-sparse-keymap)))
     (set-keymap-parent map swiper-map)
-    (define-key map (kbd "M-.") 'swiper-isearch-thing-at-point)
+    (define-key map (kbd "M-n") 'swiper-isearch-thing-at-point)
     (define-key map (kbd "C-r") 'swiper-isearch-C-r)
     map)
   "Keymap for `swiper-isearch'.")
